@@ -164,15 +164,18 @@ backend:
   
   - task: "Preview Endpoint"
     implemented: true
-    working: true
+    working: false
     file: "backend/routes/export.py"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
     needs_retesting: false
     status_history:
       - working: true
         agent: "main"
         comment: "Preview endpoint /api/export/preview/{id} exists and returns presentation + slides data"
+      - working: false
+        agent: "testing"
+        comment: "❌ FAILING: Preview endpoint returning 520 Internal Server Error. Likely serialization issue with complex objects in response. Needs investigation and fix."
   
   - task: "Slides Management API"
     implemented: true
