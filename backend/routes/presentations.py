@@ -216,7 +216,7 @@ async def create_slide_for_presentation(
             background=slide_data.get('background', {'type': 'solid', 'color': '#ffffff'}),
             notes=slide_data.get('notes', ''),
             duration=slide_data.get('duration', 0),
-            transition=slide_data.get('transition', 'none')
+            transition=slide_data.get('transition', None)  # Changed from 'none' to None
         )
         
         # Insert into database
