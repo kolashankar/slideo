@@ -354,7 +354,7 @@ class SlideoTester:
             ]
         }
         
-        success, response, details = await self.make_request("PUT", f"/slides/{self.test_slide_id}", data)
+        success, response, details = await self.make_request("PUT", f"/slides/slides/{self.test_slide_id}", data)
         
         if success and response.get("success"):
             updated_slide = response.get("data", {})
