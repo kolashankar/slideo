@@ -15,6 +15,24 @@ export const Editor = () => {
   const [showChat, setShowChat] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
   
+  // Handle template application
+  const handleApplyTemplate = async ({ template, colorScheme, fontPairing }) => {
+    try {
+      await api.post('/api/templates/apply', {
+        presentation_id: editor.presentation.id,
+        template_id: template.id,
+        color_scheme: colorScheme,
+        font_pairing: fontPairing
+      });
+      
+      // Reload slides to see changes
+      await editor.loadPresentation(editor.presentation.id);
+    } catch (error) {
+      console.error('Error applying template:', error);
+      alert('Failed to apply template. Please try again.');
+    }
+  };
+  
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e) => {
