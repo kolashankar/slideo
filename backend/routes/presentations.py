@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from typing import List, Optional
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from datetime import datetime, timezone
+import logging
 
 from models.presentation import (
     Presentation, 
@@ -12,6 +13,7 @@ from models.presentation import (
 from models.user import User
 from routes.auth import get_current_user, get_db
 
+logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/presentations", tags=["Presentations"])
 
 @router.get("", response_model=List[PresentationResponse])
