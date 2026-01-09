@@ -130,31 +130,7 @@ user_problem_statement: |
   - Backend endpoint for contextual images
 
 backend:
-  - task: "AI Service - Gemini Integration"
-    implemented: true
-    working: "NA"
-    file: "/app/backend/services/gemini_service.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: true
-    status_history:
-      - working: "NA"
-        agent: "main"
-        comment: "Implemented Gemini 3 Flash and Gemini Nano Banana integration using emergentintegrations library. Need to test text and image generation."
-
-  - task: "AI Service - Presentation Generator"
-    implemented: true
-    working: "NA"
-    file: "/app/backend/services/presentation_generator.py"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: true
-    status_history:
-      - working: "NA"
-        agent: "main"
-        comment: "Implemented business logic for AI presentation generation including full presentations, outlines, single slides, and content improvement. Need to test all generation endpoints."
-
-  - task: "AI Routes - API Endpoints"
+  - task: "Editor Route - Contextual Image Generation"
     implemented: true
     working: "NA"
     file: "/app/backend/routes/ai.py"
@@ -164,81 +140,130 @@ backend:
     status_history:
       - working: "NA"
         agent: "main"
-        comment: "Implemented 5 AI endpoints: generate-presentation, generate-outline, generate-slide-content, improve-content, generate-image, plus health check. Need to test with authentication."
+        comment: "Added POST /api/ai/generate-slide-image endpoint for contextual image generation based on slide content. Need to test with authentication and various slide contexts."
 
-  - task: "Slide Model - Data Structure"
+frontend:
+  - task: "Editor Page - Main Layout"
     implemented: true
     working: "NA"
-    file: "/app/backend/models/slide.py"
+    file: "/app/frontend/src/pages/Editor.js"
     stuck_count: 0
     priority: "high"
     needs_retesting: true
     status_history:
       - working: "NA"
         agent: "main"
-        comment: "Implemented complete slide model with ElementPosition, TextStyle, ShapeStyle, ImageStyle, SlideElement, SlideBackground, and Slide. Includes all request/response models."
+        comment: "Implemented full editor page with navbar, toolbar, canvas, slide list, and properties panel. Includes keyboard shortcuts handler. Need to test complete workflow."
 
-  - task: "Slide Routes - CRUD Operations"
+  - task: "Editor Hook - State Management"
     implemented: true
     working: "NA"
-    file: "/app/backend/routes/slides.py"
+    file: "/app/frontend/src/hooks/useEditor.js"
     stuck_count: 0
     priority: "high"
     needs_retesting: true
     status_history:
       - working: "NA"
         agent: "main"
-        comment: "Implemented 7 slide endpoints: list slides, create slide, get slide, update slide, delete slide, duplicate slide, reorder slides. Need to test all CRUD operations with ownership verification."
+        comment: "Implemented complete editor state management with loading, saving, undo/redo, element CRUD, slide navigation, zoom controls, and auto-save. Need to test all state transitions."
 
-  - task: "Auth Utils - User Dependency"
+  - task: "Canvas Component - Interactive Editing"
     implemented: true
     working: "NA"
-    file: "/app/backend/utils/auth_utils.py"
+    file: "/app/frontend/src/components/editor/Canvas.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implemented interactive canvas with drag-and-drop, 8-handle resize, element selection, inline text editing. Need to test drag, resize, and text editing functionality."
+
+  - task: "Toolbar Component - Tools"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/editor/Toolbar.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implemented toolbar with add text, add shapes (rectangle, circle), AI image generator, undo/redo, zoom controls, and save status. Need to test all tool actions."
+
+  - task: "SlideList Component - Navigation"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/editor/SlideList.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implemented slide navigation sidebar with thumbnails, add slide, duplicate, delete. Need to test slide navigation and CRUD operations."
+
+  - task: "ElementEditor Component - Properties Panel"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/editor/ElementEditor.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implemented properties panel for text, shape, and image elements with position, size, font, color, alignment controls. Need to test property updates."
+
+  - task: "ImageGenerator Component - AI Image Modal"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/editor/ImageGenerator.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Implemented AI image generation modal with prompt input, 6 style options, loading states, preview, and add to canvas. Need to test image generation and canvas integration."
+
+  - task: "Navigation Integration - Dashboard to Editor"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/Dashboard.js"
     stuck_count: 0
     priority: "medium"
     needs_retesting: true
     status_history:
       - working: "NA"
         agent: "main"
-        comment: "Added get_current_user dependency function to extract and verify JWT tokens. Need to verify it works with all new endpoints."
+        comment: "Updated dashboard to navigate to editor when clicking presentation cards. Need to test navigation flow."
 
-frontend:
-  - task: "AI Hook - useAI"
+  - task: "Navbar Enhancement - Editor Support"
     implemented: true
     working: "NA"
-    file: "/app/frontend/src/hooks/useAI.js"
+    file: "/app/frontend/src/components/common/Navbar.js"
     stuck_count: 0
-    priority: "high"
-    needs_retesting: false
+    priority: "medium"
+    needs_retesting: true
     status_history:
       - working: "NA"
         agent: "main"
-        comment: "Implemented React hook for AI operations with loading states, progress tracking, and error handling. Frontend testing not required yet as it's not integrated into the UI flow."
-
-  - task: "AI Generator Component"
-    implemented: true
-    working: "NA"
-    file: "/app/frontend/src/components/dashboard/AIGenerator.js"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: false
-    status_history:
-      - working: "NA"
-        agent: "main"
-        comment: "Implemented beautiful AI generator modal with multi-step flow (topic input, options selection, generation). Frontend testing not required yet as it's not integrated into Dashboard."
+        comment: "Enhanced navbar to show presentation title, save status, and back button in editor view. Need to test in editor context."
 
 metadata:
   created_by: "main_agent"
-  version: "1.0"
-  test_sequence: 0
-  run_ui: false
+  version: "2.0"
+  test_sequence: 1
+  run_ui: true
 
 test_plan:
   current_focus:
-    - "AI Service - Gemini Integration"
-    - "AI Service - Presentation Generator"
-    - "AI Routes - API Endpoints"
-    - "Slide Routes - CRUD Operations"
+    - "Editor Page - Main Layout"
+    - "Canvas Component - Interactive Editing"
+    - "Toolbar Component - Tools"
+    - "ImageGenerator Component - AI Image Modal"
+    - "Editor Route - Contextual Image Generation"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
@@ -246,27 +271,33 @@ test_plan:
 agent_communication:
   - agent: "main"
     message: |
-      Phase 3 and Phase 4 implementation complete. 
+      Phase 5 and Phase 6 implementation complete. 
       
       Backend implementation includes:
-      1. Gemini service with text and image generation
-      2. Presentation generator with multiple generation modes
-      3. 5 AI API endpoints + health check
-      4. Complete slide data model with elements
-      5. 7 slide CRUD endpoints
-      6. Updated authentication utilities
+      1. New POST /api/ai/generate-slide-image endpoint for contextual images
       
       Frontend implementation includes:
-      1. useAI hook for AI operations
-      2. AIGenerator modal component (not yet integrated)
+      1. Editor page with full layout (navbar, toolbar, canvas, sidebar, properties)
+      2. useEditor hook with complete state management
+      3. Interactive canvas with drag-and-drop and resize
+      4. Toolbar with text/shape/image tools
+      5. Slide navigation sidebar
+      6. Element properties panel
+      7. AI image generator modal
+      8. Navigation from dashboard to editor
+      9. Enhanced navbar for editor view
       
-      TESTING PRIORITY:
-      1. Test AI health endpoint
-      2. Test AI presentation generation (requires authentication)
-      3. Test slide CRUD operations (requires authentication and presentation)
-      4. Verify all endpoints return proper error messages
+      TESTING PRIORITY (UI Testing Required):
+      1. Test complete workflow: Dashboard → Create/Open Presentation → Editor → Edit → Auto-save
+      2. Test canvas interactions: Add text, drag, resize, select, delete
+      3. Test toolbar: Add shapes, AI image generation, undo/redo, zoom
+      4. Test slide navigation: Add slide, delete slide, switch slides, duplicate
+      5. Test properties panel: Change font, color, size, alignment
+      6. Test AI image generation: Generate image, preview, add to canvas
+      7. Test keyboard shortcuts: Ctrl+Z, Ctrl+Y, Delete, Arrow keys
+      8. Test auto-save functionality
+      9. Test contextual image generation endpoint
       
-      Note: User login/signup flow from Phase 1 should be working.
-      Note: Presentation CRUD from Phase 2 should be working.
+      Note: Phase 1-4 should still be working (auth, dashboard, presentations, slides)
       
-      IMPORTANT: All AI and slide endpoints require authentication (Bearer token).
+      IMPORTANT: All editor operations require authentication. Test with real user session.
