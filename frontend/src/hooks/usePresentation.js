@@ -77,6 +77,22 @@ export const usePresentation = () => {
     }
   };
 
+  const createPresentationFromAI = async (aiData) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await api.post('/presentations/from-ai', aiData);
+      setPresentations([response.data, ...presentations]);
+      return { success: true, data: response.data };
+    } catch (err) {
+      const errorMsg = err.response?.data?.detail || 'Failed to create presentation from AI';
+      setError(errorMsg);
+      return { success: false, error: errorMsg };
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     presentations,
     loading,
@@ -85,5 +101,6 @@ export const usePresentation = () => {
     createPresentation,
     deletePresentation,
     updatePresentation,
+    createPresentationFromAI,
   };
 };
