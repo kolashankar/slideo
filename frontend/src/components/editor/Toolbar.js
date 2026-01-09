@@ -24,8 +24,49 @@ import KeyboardShortcuts from '../common/KeyboardShortcuts';
 import { toast } from 'sonner';
 import api from '../../utils/api';
 
-export const Toolbar = ({ editor, onToggleChat, onToggleTemplates, showChat }) => {
+export const Toolbar = ({ editor, onToggleChat, onToggleTemplates, showChat, presentationId }) => {
   const [showImageGenerator, setShowImageGenerator] = useState(false);
+  const [showShortcuts, setShowShortcuts] = useState(false);
+  const navigate = useNavigate();
+  
+  const handlePreview = () => {
+    navigate(`/preview/${presentationId}`);
+  };
+  
+  const handleExport = async () => {
+    try {
+      toast.loading('Generating PDF...', { id: 'export-pdf' });
+      const response = await api.post(`/api/export/pdf/${presentationId}`, {}, {
+        responseType: 'blob'
+      });
+      
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `presentation.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      
+      toast.success('PDF downloaded successfully', { id: 'export-pdf' });
+    } catch (error) {
+      console.error('Error exporting PDF:', error);
+      toast.error('Failed to export PDF', { id: 'export-pdf' });
+    }
+  };
+  
+  const handleShare = async () => {
+    try {
+      const response = await api.post(`/api/export/share/${presentationId}`);
+      const shareLink = response.data.share_link;
+      
+      await navigator.clipboard.writeText(shareLink);
+      toast.success('Share link copied to clipboard!');
+    } catch (error) {
+      console.error('Error generating share link:', error);
+      toast.error('Failed to generate share link');
+    }
+  };
   
   const addTextElement = () => {
     editor.addElement({
