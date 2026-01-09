@@ -12,9 +12,17 @@ import {
   Save,
   Sparkles,
   MessageSquare,
-  Palette
+  Palette,
+  Play,
+  Download,
+  Share2,
+  Keyboard
 } from 'lucide-react';
 import { ImageGenerator } from './ImageGenerator';
+import { useNavigate } from 'react-router-dom';
+import KeyboardShortcuts from '../common/KeyboardShortcuts';
+import { toast } from 'sonner';
+import api from '../../utils/api';
 
 export const Toolbar = ({ editor, onToggleChat, onToggleTemplates, showChat }) => {
   const [showImageGenerator, setShowImageGenerator] = useState(false);
