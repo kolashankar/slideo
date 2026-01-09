@@ -292,7 +292,7 @@ class SlideoTester:
         }
         
         success, response, details = await self.make_request(
-            "POST", f"/presentations/{self.test_presentation_id}/slides", data)
+            "POST", f"/slides/presentations/{self.test_presentation_id}/slides", data)
         
         if success and response.get("success"):
             slide_data = response.get("data", {})
