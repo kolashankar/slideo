@@ -323,7 +323,7 @@ class SlideoTester:
             self.log_test("Get Single Slide", False, "No test slide available")
             return
         
-        success, response, details = await self.make_request("GET", f"/slides/{self.test_slide_id}")
+        success, response, details = await self.make_request("GET", f"/slides/slides/{self.test_slide_id}")
         
         if success and response.get("success"):
             slide_data = response.get("data", {})
