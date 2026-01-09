@@ -164,7 +164,7 @@ async def get_preview_data(presentation_id: str, token: str = None):
         
         # Get all slides
         slide_ids = presentation.get('slides', [])
-        slides_cursor = db.slides.find({"id": {"$in": slide_ids}})
+        slides_cursor = db.slides.find({"id": {"$in": slide_ids}}, {"_id": 0})
         slides = await slides_cursor.to_list(length=None)
         
         # Sort slides by slide_number
