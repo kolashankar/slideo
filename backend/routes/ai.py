@@ -232,6 +232,72 @@ async def generate_image(
             detail=f"Failed to generate image: {str(e)}"
         )
 
+@router.post("/generate-slide-image")
+async def generate_slide_image(
+    request: dict,
+    current_user: dict = Depends(get_current_user)
+):
+    """
+    Generate contextual image for a slide based on slide content
+    
+    This endpoint analyzes the slide content and generates a relevant image
+    """
+    try:
+        slide_content = request.get('slide_content', '')
+        slide_title = request.get('slide_title', '')
+        style = request.get('style', 'professional')
+        
+        if not slide_content and not slide_title:
+            raise HTTPException(
+                status_code=400,
+                detail="Either slide_content or slide_title must be provided"
+            )
+        
+        # Create contextual prompt
+        contextual_prompt = f"""Create a professional, high-quality image for a presentation slide.
+
+Slide Title: {slide_title}
+Slide Content: {slide_content}
+
+Style: {style}, modern, clean
+The image should visually support and enhance the slide content.
+Make it suitable for a business presentation."""
+        
+        logger.info(f"User {current_user['email']} generating contextual image for slide: {slide_title}")
+        
+        # Generate image
+        text_response, images = await gemini_service.generate_image(
+            prompt=contextual_prompt
+        )
+        
+        if not images:
+            raise HTTPException(
+                status_code=500,
+                detail="No images were generated"
+            )
+        
+        # Return first image
+        image_data = images[0]
+        
+        return {
+            "success": True,
+            "data": {
+                "image_base64": image_data.get('data'),
+                "mime_type": image_data.get('mime_type', 'image/png'),
+                "text_response": text_response
+            },
+            "message": "Contextual image generated successfully"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error generating contextual image: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to generate contextual image: {str(e)}"
+        )
+
 @router.get("/health")
 async def ai_health_check():
     """Check if AI services are configured correctly"""
