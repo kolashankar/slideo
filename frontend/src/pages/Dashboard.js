@@ -3,12 +3,15 @@ import { useAuth } from '../hooks/useAuth';
 import { usePresentation } from '../hooks/usePresentation';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
-import { Plus, Search, Grid3x3, List, Loader2 } from 'lucide-react';
+import { Plus, Search, Grid3x3, List, Loader2, HelpCircle } from 'lucide-react';
 import { Navbar } from '../components/common/Navbar';
 import { PresentationCard } from '../components/dashboard/PresentationCard';
 import { CreateNew } from '../components/dashboard/CreateNew';
+import LoadingSkeleton from '../components/common/LoadingSkeleton';
+import OnboardingTutorial from '../components/common/OnboardingTutorial';
 import { useNavigate } from 'react-router-dom';
 import { Tabs, TabsList, TabsTrigger } from '../components/ui/tabs';
+import { toast } from 'sonner';
 
 export const Dashboard = () => {
   const { user } = useAuth();
