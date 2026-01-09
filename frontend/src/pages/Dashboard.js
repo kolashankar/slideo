@@ -101,22 +101,33 @@ export const Dashboard = () => {
                 {presentations.length} {presentations.length === 1 ? 'presentation' : 'presentations'}
               </p>
             </div>
-            <Button 
-              className="gap-2" 
-              onClick={() => setShowCreateDialog(true)}
-              data-testid="create-presentation-button"
-            >
-              <Plus className="w-5 h-5" />
-              Create New
-            </Button>
-            <Button 
-              variant="outline"
-              className="gap-2" 
-              onClick={() => setShowOnboarding(true)}
-            >
-              <HelpCircle className="w-5 h-5" />
-              Tutorial
-            </Button>
+            <div className="flex gap-3">
+              <Button 
+                className="gap-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700" 
+                onClick={() => setShowAIGenerator(true)}
+                data-testid="ai-generate-button"
+              >
+                <Sparkles className="w-5 h-5" />
+                Generate with AI
+              </Button>
+              <Button 
+                variant="outline"
+                className="gap-2" 
+                onClick={() => setShowCreateDialog(true)}
+                data-testid="create-presentation-button"
+              >
+                <Plus className="w-5 h-5" />
+                Create Manually
+              </Button>
+              <Button 
+                variant="outline"
+                className="gap-2" 
+                onClick={() => setShowOnboarding(true)}
+              >
+                <HelpCircle className="w-5 h-5" />
+                Tutorial
+              </Button>
+            </div>
           </div>
 
           {/* Search and Filter Bar */}
