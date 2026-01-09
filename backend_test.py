@@ -308,7 +308,7 @@ class SlideoTester:
             return
         
         success, response, details = await self.make_request(
-            "GET", f"/presentations/{self.test_presentation_id}/slides")
+            "GET", f"/slides/presentations/{self.test_presentation_id}/slides")
         
         if success and response.get("success"):
             slides = response.get("data", [])
