@@ -1,14 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useEditor } from '@/hooks/useEditor';
 import { Navbar } from '@/components/common/Navbar';
 import { Toolbar } from '@/components/editor/Toolbar';
 import { Canvas } from '@/components/editor/Canvas';
 import { SlideList } from '@/components/editor/SlideList';
 import { ElementEditor } from '@/components/editor/ElementEditor';
+import { AIChat } from '@/components/editor/AIChat';
 import { Loader2 } from 'lucide-react';
 
 export const Editor = () => {
   const editor = useEditor();
+  const [showChat, setShowChat] = useState(false);
+  const [showTemplates, setShowTemplates] = useState(false);
   
   // Keyboard shortcuts
   useEffect(() => {
