@@ -48,9 +48,8 @@ export const Dashboard = () => {
   };
 
   const handlePresentationClick = (presentation) => {
-    // TODO: Navigate to editor when Phase 5 is complete
-    console.log('Open presentation:', presentation.id);
-    // navigate(`/editor/${presentation.id}`);
+    // Navigate to editor
+    navigate(`/editor/${presentation.id}`);
   };
 
   return (
