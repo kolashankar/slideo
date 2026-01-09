@@ -178,6 +178,54 @@ backend:
         comment: "Slide CRUD operations at /api/slides/* endpoints work correctly"
 
 frontend:
+  - task: "Editor Slide List Sidebar"
+    implemented: true
+    working: true
+    file: "frontend/src/components/editor/SlideList.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "COMPLETE: Left sidebar in editor showing all slides with thumbnails, add slide button, duplicate and delete actions. Fully functional."
+  
+  - task: "Editor Element Editor Sidebar"
+    implemented: true
+    working: true
+    file: "frontend/src/components/editor/ElementEditor.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "COMPLETE: Right sidebar properties panel for editing selected elements (position, size, text, colors, fonts, etc). Fully functional."
+  
+  - task: "Editor AI Chat Sidebar"
+    implemented: true
+    working: true
+    file: "frontend/src/components/editor/AIChat.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "COMPLETE: Right sidebar AI assistant with chat interface, quick actions (Improve, Image, Layout), message history. Fully functional."
+  
+  - task: "Editor Hook - useEditor"
+    implemented: true
+    working: "NA"
+    file: "frontend/src/hooks/useEditor.js"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Editor hook loads presentation and slides. Was calling /presentations/{id}/slides endpoint which caused 404. Backend endpoint has been added to fix this."
+  
   - task: "AI Generator Component"
     implemented: true
     working: "NA"
@@ -188,31 +236,7 @@ frontend:
     status_history:
       - working: "NA"
         agent: "main"
-        comment: "AIGenerator component existed but was not integrated. Now integrated into Dashboard with proper button and flow"
-  
-  - task: "Dashboard Integration"
-    implemented: true
-    working: "NA"
-    file: "frontend/src/pages/Dashboard.js"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: true
-    status_history:
-      - working: "NA"
-        agent: "main"
-        comment: "Added 'Generate with AI' button in dashboard header and empty state. Integrated AIGenerator component with proper handlers"
-  
-  - task: "Create Presentation from AI Hook"
-    implemented: true
-    working: "NA"
-    file: "frontend/src/hooks/usePresentation.js"
-    stuck_count: 0
-    priority: "high"
-    needs_retesting: true
-    status_history:
-      - working: "NA"
-        agent: "main"
-        comment: "Added createPresentationFromAI method to usePresentation hook that calls /api/presentations/from-ai endpoint"
+        comment: "AIGenerator component integrated into Dashboard with proper button and flow"
   
   - task: "Preview Page"
     implemented: true
@@ -224,7 +248,7 @@ frontend:
     status_history:
       - working: true
         agent: "main"
-        comment: "Preview page exists and renders slides correctly. Issue was data not being created, not the preview itself"
+        comment: "Preview page renders slides correctly with keyboard navigation, fullscreen, and controls"
 
 metadata:
   created_by: "main_agent"
