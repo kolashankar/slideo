@@ -142,3 +142,127 @@ async def delete_presentation(
         raise HTTPException(status_code=404, detail="Presentation not found")
     
     return {"message": "Presentation deleted successfully"}
+
+@router.post("/from-ai", response_model=PresentationResponse)
+async def create_presentation_from_ai(
+    ai_data: dict,
+    current_user: User = Depends(get_current_user),
+    db: AsyncIOMotorDatabase = Depends(get_db)
+):
+    """
+    Create a presentation from AI-generated data
+    
+    This endpoint takes the raw AI output and converts it into a proper presentation
+    with slides and elements positioned correctly.
+    """
+    try:
+        import uuid
+        from models.slide import Slide, SlideElement, ElementPosition, SlideBackground
+        
+        # Extract presentation data
+        title = ai_data.get('title', 'Untitled Presentation')
+        description = ai_data.get('description', '')
+        ai_slides = ai_data.get('slides', [])
+        
+        if not ai_slides:
+            raise HTTPException(status_code=400, detail="No slides provided in AI data")
+        
+        # Create presentation
+        presentation = Presentation(
+            user_id=current_user.id,
+            title=title,
+            description=description,
+            template_id=None
+        )
+        
+        # Convert to dict and serialize datetimes
+        pres_dict = presentation.model_dump()
+        pres_dict['created_at'] = pres_dict['created_at'].isoformat()
+        pres_dict['updated_at'] = pres_dict['updated_at'].isoformat()
+        
+        # Insert presentation
+        await db.presentations.insert_one(pres_dict)
+        
+        # Create slides from AI data
+        slide_ids = []
+        for idx, ai_slide in enumerate(ai_slides, 1):
+            # Determine layout
+            layout = ai_slide.get('layout', 'content')
+            if idx == 1:
+                layout = 'title-slide'
+            elif idx == len(ai_slides):
+                layout = 'conclusion'
+            
+            # Create elements from AI content
+            elements = []
+            
+            # Title element
+            slide_title = ai_slide.get('title', f'Slide {idx}')
+            title_element = SlideElement(
+                type='text',
+                position=ElementPosition(
+                    x=10, y=10, width=80, height=15, z_index=1
+                ),
+                content={'text': slide_title},
+                style={
+                    'font_family': 'Inter',
+                    'font_size': 32 if layout == 'title-slide' else 24,
+                    'font_weight': 700,
+                    'color': '#1a202c',
+                    'align': 'left'
+                }
+            )
+            elements.append(title_element.model_dump())
+            
+            # Content element
+            slide_content = ai_slide.get('content', '')
+            if slide_content:
+                content_element = SlideElement(
+                    type='text',
+                    position=ElementPosition(
+                        x=10, y=30, width=80, height=60, z_index=1
+                    ),
+                    content={'text': slide_content},
+                    style={
+                        'font_family': 'Inter',
+                        'font_size': 18,
+                        'font_weight': 400,
+                        'color': '#2d3748',
+                        'align': 'left',
+                        'line_height': 1.6
+                    }
+                )
+                elements.append(content_element.model_dump())
+            
+            # Create slide
+            slide = Slide(
+                presentation_id=presentation.id,
+                slide_number=idx,
+                title=slide_title,
+                layout=layout,
+                elements=elements,
+                background=SlideBackground(type='solid', color='#FFFFFF'),
+                notes=ai_slide.get('speaker_notes', '')
+            )
+            
+            # Insert slide
+            slide_dict = slide.model_dump()
+            slide_dict['created_at'] = slide_dict['created_at'].isoformat()
+            slide_dict['updated_at'] = slide_dict['updated_at'].isoformat()
+            await db.slides.insert_one(slide_dict)
+            
+            slide_ids.append(slide.id)
+        
+        # Update presentation with slide IDs
+        await db.presentations.update_one(
+            {"id": presentation.id},
+            {"$set": {"slides": slide_ids}}
+        )
+        
+        return PresentationResponse(**presentation.model_dump())
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error creating presentation from AI: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to create presentation: {str(e)}")
