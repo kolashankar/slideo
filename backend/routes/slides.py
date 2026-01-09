@@ -45,7 +45,7 @@ async def get_presentation_slides(
         # Get all slides for this presentation
         slides = await slides_collection.find({
             "presentation_id": presentation_id
-        }).sort("slide_number", 1).to_list(length=100)
+        }, {"_id": 0}).sort("slide_number", 1).to_list(length=100)
         
         return {
             "success": True,
