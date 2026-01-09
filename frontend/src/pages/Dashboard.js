@@ -66,6 +66,26 @@ export const Dashboard = () => {
     navigate(`/editor/${presentation.id}`);
   };
 
+  const handleAIGenerated = async (aiData) => {
+    try {
+      toast.loading('Creating presentation from AI...', { id: 'ai-create' });
+      
+      const result = await createPresentationFromAI(aiData);
+      
+      if (result.success) {
+        toast.success('Presentation created successfully!', { id: 'ai-create' });
+        setShowAIGenerator(false);
+        // Navigate to editor
+        navigate(`/editor/${result.data.id}`);
+      } else {
+        toast.error(result.error || 'Failed to create presentation', { id: 'ai-create' });
+      }
+    } catch (error) {
+      console.error('Error creating presentation from AI:', error);
+      toast.error('Failed to create presentation', { id: 'ai-create' });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50" data-testid="dashboard-page">
       <Navbar />
