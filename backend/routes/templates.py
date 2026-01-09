@@ -13,7 +13,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class ApplyTemplateRequest(BaseModel):
-    \"\"\"Request to apply template to presentation\"\"\"
+    """Request to apply template to presentation"""
     presentation_id: str
     template_id: str
     color_scheme: Dict[str, str]
