@@ -40,3 +40,33 @@ def decode_access_token(token: str) -> Optional[dict]:
         return payload
     except JWTError:
         return None
+
+# Dependency to get database
+async def get_db():
+    from server import db
+    return db
+
+# Dependency to get current user from token
+async def get_current_user(
+    authorization: Optional[str] = Header(None),
+    db: AsyncIOMotorDatabase = Depends(get_db)
+) -> dict:
+    """Extract and verify current user from JWT token"""
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Missing or invalid authorization header")
+    
+    token = authorization.replace("Bearer ", "")
+    payload = decode_access_token(token)
+    
+    if not payload:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+    
+    user_id = payload.get("sub")
+    if not user_id:
+        raise HTTPException(status_code=401, detail="Invalid token payload")
+    
+    user_data = await db.users.find_one({"id": user_id}, {"_id": 0})
+    if not user_data:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    return user_data
