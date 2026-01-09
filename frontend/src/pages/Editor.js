@@ -6,7 +6,9 @@ import { Canvas } from '@/components/editor/Canvas';
 import { SlideList } from '@/components/editor/SlideList';
 import { ElementEditor } from '@/components/editor/ElementEditor';
 import { AIChat } from '@/components/editor/AIChat';
+import { TemplateGallery } from '@/components/templates/TemplateGallery';
 import { Loader2 } from 'lucide-react';
+import api from '@/utils/api';
 
 export const Editor = () => {
   const editor = useEditor();
