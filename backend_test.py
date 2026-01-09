@@ -371,7 +371,7 @@ class SlideoTester:
             self.log_test("Duplicate Slide", False, "No test slide available")
             return
         
-        success, response, details = await self.make_request("POST", f"/slides/{self.test_slide_id}/duplicate")
+        success, response, details = await self.make_request("POST", f"/slides/slides/{self.test_slide_id}/duplicate")
         
         if success and response.get("success"):
             duplicated_slide = response.get("data", {})
