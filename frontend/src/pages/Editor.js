@@ -127,6 +127,15 @@ export const Editor = () => {
           <ElementEditor editor={editor} />
         ) : null}
       </div>
+      
+      {/* Template Gallery Modal */}
+      {showTemplates && (
+        <TemplateGallery
+          onApply={handleApplyTemplate}
+          onClose={() => setShowTemplates(false)}
+          currentTemplate={editor.presentation?.template}
+        />
+      )}
     </div>
   );
 };
