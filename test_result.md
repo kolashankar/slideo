@@ -105,22 +105,29 @@
 user_problem_statement: |
   Slideo - AI-Powered Presentation Builder MVP
   
-  Implementation of Phase 3 (AI Integration - Text Generation) and Phase 4 (Slide Data Model & Storage)
+  Implementation of Phase 5 (Slide Editor - Canvas & Toolbar) and Phase 6 (AI Image Generation)
   
-  Phase 3 includes:
-  - Gemini 3 Flash integration for text generation
-  - Gemini Nano Banana integration for image generation
-  - Full presentation generation from prompts
-  - Outline generation
-  - Single slide content generation
-  - Content improvement
-  - Frontend AI generator modal
+  Phase 5 includes:
+  - Interactive slide editor with canvas
+  - Element selection and manipulation (text, shapes, images)
+  - Drag-and-drop positioning
+  - 8-handle resize system
+  - Inline text editing
+  - Properties panel (font, color, size, alignment)
+  - Toolbar with add text/shape/image tools
+  - Slide navigation sidebar with thumbnails
+  - Undo/Redo functionality
+  - Keyboard shortcuts (Ctrl+Z, Ctrl+Y, Delete, Arrow keys)
+  - Auto-save (debounced 2-second saves)
+  - Zoom controls (25%-200%)
+  - Add/Delete/Duplicate slides
   
-  Phase 4 includes:
-  - Complete slide data model with elements
-  - Slide CRUD operations
-  - Slide reordering and duplication
-  - Element positioning and styling
+  Phase 6 includes:
+  - AI image generation modal in editor
+  - Style selection (6 styles)
+  - Contextual slide image generation
+  - Add generated images to canvas
+  - Backend endpoint for contextual images
 
 backend:
   - task: "AI Service - Gemini Integration"
