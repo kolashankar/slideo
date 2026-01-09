@@ -79,7 +79,12 @@ export const Editor = () => {
       <Navbar presentation={editor.presentation} saving={editor.saving} />
       
       {/* Toolbar */}
-      <Toolbar editor={editor} />
+      <Toolbar 
+        editor={editor} 
+        onToggleChat={() => setShowChat(!showChat)}
+        onToggleTemplates={() => setShowTemplates(!showTemplates)}
+        showChat={showChat}
+      />
       
       {/* Main Editor Area */}
       <div className="flex-1 flex overflow-hidden">
@@ -91,10 +96,16 @@ export const Editor = () => {
           <Canvas editor={editor} />
         </div>
         
-        {/* Right Sidebar - Element Editor */}
-        {editor.selectedElement && (
+        {/* Right Sidebar - Element Editor or AI Chat */}
+        {showChat ? (
+          <AIChat 
+            presentationId={editor.presentation?.id} 
+            currentSlide={editor.currentSlide}
+            onClose={() => setShowChat(false)}
+          />
+        ) : editor.selectedElement ? (
           <ElementEditor editor={editor} />
-        )}
+        ) : null}
       </div>
     </div>
   );
