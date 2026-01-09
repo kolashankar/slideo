@@ -931,7 +931,7 @@ Provide helpful, specific advice:
 - [x] Generated presentations have 5-15 slides with relevant content
 - [x] User can edit slide content (text)
 - [x] User can add AI-generated images to slides
-- [ ] User can export presentation to PDF
+- [x] User can export presentation to PDF
 - [x] Dashboard shows all user presentations
 - [x] Templates can be applied to presentations
 - [x] AI chat provides helpful suggestions
