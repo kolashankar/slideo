@@ -1,6 +1,8 @@
 from passlib.context import CryptContext
 from jose import JWTError, jwt
 from datetime import datetime, timedelta, timezone
+from fastapi import HTTPException, Header, Depends
+from motor.motor_asyncio import AsyncIOMotorDatabase
 import os
 from typing import Optional
 
