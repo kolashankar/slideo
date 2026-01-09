@@ -27,9 +27,17 @@ export const Dashboard = () => {
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   useEffect(() => {
     fetchPresentations();
+    
+    // Show onboarding for first-time users
+    const hasSeenOnboarding = localStorage.getItem('hasSeenOnboarding');
+    if (!hasSeenOnboarding) {
+      setShowOnboarding(true);
+      localStorage.setItem('hasSeenOnboarding', 'true');
+    }
   }, []);
 
   const handleSearch = (query) => {
