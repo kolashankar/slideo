@@ -406,7 +406,7 @@ class SlideoTester:
             self.log_test("Delete Slide", False, "No test slide available")
             return
         
-        success, response, details = await self.make_request("DELETE", f"/slides/{self.test_slide_id}")
+        success, response, details = await self.make_request("DELETE", f"/slides/slides/{self.test_slide_id}")
         
         if success and response.get("success"):
             self.log_test("Delete Slide", True, "Slide deleted successfully")
