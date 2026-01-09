@@ -3,10 +3,11 @@ import { useAuth } from '../hooks/useAuth';
 import { usePresentation } from '../hooks/usePresentation';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
-import { Plus, Search, Grid3x3, List, Loader2, HelpCircle } from 'lucide-react';
+import { Plus, Search, Grid3x3, List, Loader2, HelpCircle, Sparkles } from 'lucide-react';
 import { Navbar } from '../components/common/Navbar';
 import { PresentationCard } from '../components/dashboard/PresentationCard';
 import { CreateNew } from '../components/dashboard/CreateNew';
+import AIGenerator from '../components/dashboard/AIGenerator';
 import LoadingSkeleton from '../components/common/LoadingSkeleton';
 import OnboardingTutorial from '../components/common/OnboardingTutorial';
 import { useNavigate } from 'react-router-dom';
@@ -22,9 +23,11 @@ export const Dashboard = () => {
     fetchPresentations,
     createPresentation,
     deletePresentation,
+    createPresentationFromAI,
   } = usePresentation();
 
   const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const [showAIGenerator, setShowAIGenerator] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
   const [showOnboarding, setShowOnboarding] = useState(false);
