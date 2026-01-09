@@ -13,7 +13,7 @@ from datetime import datetime
 from typing import Dict, Any, Optional
 
 # Configuration
-BACKEND_URL = "https://pdf-slideshow-2.preview.emergentagent.com/api"
+BACKEND_URL = "https://presentation-fix-4.preview.emergentagent.com/api"
 TEST_USER_EMAIL = "test.user.ai@slideo.com"
 TEST_USER_PASSWORD = "TestPassword123!"
 TEST_USER_NAME = "AI Test User"
