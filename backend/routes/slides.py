@@ -90,6 +90,9 @@ async def create_slide(
         slide_dict = slide.model_dump()
         await slides_collection.insert_one(slide_dict)
         
+        # Remove MongoDB _id for JSON serialization
+        slide_dict.pop('_id', None)
+        
         # Update presentation's slides array
         await presentations_collection.update_one(
             {"id": presentation_id},
