@@ -228,6 +228,14 @@ export const Dashboard = () => {
         onCreate={handleCreatePresentation}
       />
       
+      {/* AI Generator Dialog */}
+      {showAIGenerator && (
+        <AIGenerator
+          onGenerated={handleAIGenerated}
+          onClose={() => setShowAIGenerator(false)}
+        />
+      )}
+      
       {/* Onboarding Tutorial */}
       <OnboardingTutorial
         isOpen={showOnboarding}
