@@ -393,7 +393,7 @@ class SlideoTester:
             "new_position": 2
         }
         
-        success, response, details = await self.make_request("PUT", "/slides/reorder", data)
+        success, response, details = await self.make_request("PUT", "/slides/slides/reorder", data)
         
         if success and response.get("success"):
             self.log_test("Reorder Slides", True, "Slide reordered successfully")
