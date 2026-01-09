@@ -480,7 +480,8 @@ test_plan:
     - "Template Application Endpoint"
     - "TemplateGallery Component"
     - "Editor Integration - Chat & Templates"
-  stuck_tasks: []
+  stuck_tasks:
+    - "Preview Endpoint"
   test_all: false
   test_priority: "high_first"
 
