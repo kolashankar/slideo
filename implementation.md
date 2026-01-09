@@ -4,9 +4,9 @@
 **Project Name:** Slideo  
 **Tech Stack:** FastAPI + React + MongoDB + Gemini APIs  
 **Inspiration:** Gamma, Kimi  
-**Status:** Phase 1: ✅ COMPLETED | Phase 2: ✅ COMPLETED | Phase 3: ✅ COMPLETED | Phase 4: ✅ COMPLETED
+**Status:** Phase 1: ✅ COMPLETED | Phase 2: ✅ COMPLETED | Phase 3: ✅ COMPLETED | Phase 4: ✅ COMPLETED | Phase 5: ✅ COMPLETED | Phase 6: ✅ COMPLETED
 
-**Progress:** 40% Complete (4/10 phases done)
+**Progress:** 60% Complete (6/10 phases done)
 
 ---
 
