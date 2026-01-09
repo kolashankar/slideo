@@ -100,6 +100,7 @@ export const Editor = () => {
       
       {/* Toolbar */}
       <Toolbar 
+        presentationId={presentationId} 
         editor={editor} 
         onToggleChat={() => setShowChat(!showChat)}
         onToggleTemplates={() => setShowTemplates(!showTemplates)}
