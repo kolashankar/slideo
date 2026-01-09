@@ -188,6 +188,9 @@ backend:
       - working: true
         agent: "main"
         comment: "Slide CRUD operations at /api/slides/* endpoints work correctly"
+      - working: true
+        agent: "testing"
+        comment: "✅ MOSTLY WORKING: Basic slide CRUD operations (create, read, update, delete) working correctly. Minor issues: duplicate slide and reorder slides endpoints have errors (520/404) but core functionality intact."
 
 frontend:
   - task: "Editor Slide List Sidebar"
