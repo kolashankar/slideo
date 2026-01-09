@@ -193,6 +193,12 @@ export const Dashboard = () => {
         onOpenChange={setShowCreateDialog}
         onCreate={handleCreatePresentation}
       />
+      
+      {/* Onboarding Tutorial */}
+      <OnboardingTutorial
+        isOpen={showOnboarding}
+        onClose={() => setShowOnboarding(false)}
+      />
     </div>
   );
 };
