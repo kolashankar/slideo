@@ -167,20 +167,31 @@ export const Dashboard = () => {
         {/* Empty State */}
         {!loading && presentations.length === 0 && !searchQuery && (
           <div className="bg-white rounded-lg border-2 border-dashed border-gray-300 p-12 text-center" data-testid="empty-state">
-            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Plus className="w-8 h-8 text-gray-400" />
+            <div className="w-16 h-16 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Sparkles className="w-8 h-8 text-white" />
             </div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">No presentations yet</h3>
             <p className="text-gray-600 mb-6 max-w-md mx-auto">
               Get started by creating your first AI-powered presentation. Describe your topic and let AI do the work.
             </p>
-            <Button 
-              onClick={() => setShowCreateDialog(true)}
-              data-testid="empty-state-create-button"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Create Your First Presentation
-            </Button>
+            <div className="flex gap-3 justify-center">
+              <Button 
+                onClick={() => setShowAIGenerator(true)}
+                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+                data-testid="empty-state-ai-button"
+              >
+                <Sparkles className="w-4 h-4 mr-2" />
+                Generate with AI
+              </Button>
+              <Button 
+                variant="outline"
+                onClick={() => setShowCreateDialog(true)}
+                data-testid="empty-state-create-button"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Create Manually
+              </Button>
+            </div>
           </div>
         )}
 
