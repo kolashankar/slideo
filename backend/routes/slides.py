@@ -330,6 +330,7 @@ async def duplicate_slide(
         
         # Insert duplicate
         new_slide_dict = new_slide.model_dump()
+        new_slide_dict.pop('_id', None)  # Remove _id if present
         await slides_collection.insert_one(new_slide_dict)
         
         # Update presentation
