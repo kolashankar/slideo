@@ -452,6 +452,135 @@ class SlideoTester:
         else:
             self.log_test("Invalid Slide ID Test", False, "Should have returned 404 for invalid slide ID")
 
+    # ==================== AI PRESENTATION FLOW TESTS ====================
+    
+    async def test_ai_presentation_flow(self):
+        """Test the complete AI presentation generation flow"""
+        print("\n🎯 TESTING AI PRESENTATION GENERATION FLOW")
+        print("-" * 50)
+        
+        # Step 1: Generate AI presentation data
+        ai_data = await self.test_ai_generation_for_flow()
+        if not ai_data:
+            return
+        
+        # Step 2: Create presentation from AI data
+        presentation_id = await self.test_create_from_ai_data(ai_data)
+        if not presentation_id:
+            return
+        
+        # Step 3: Test preview functionality
+        await self.test_preview_endpoint(presentation_id)
+    
+    async def test_ai_generation_for_flow(self):
+        """Test AI presentation generation and return data for flow"""
+        data = {
+            "topic": "Introduction to Artificial Intelligence",
+            "audience": "general",
+            "tone": "professional", 
+            "slide_count": 5,
+            "additional_context": "Focus on basics and real-world applications"
+        }
+        
+        print("    🤖 Step 1: Generating AI presentation structure...")
+        success, response, details = await self.make_request("POST", "/ai/generate-presentation", data)
+        
+        if success and response.get("success"):
+            presentation_data = response.get("data", {})
+            slides = presentation_data.get("slides", [])
+            
+            # Verify structure
+            required_fields = ["title", "description", "slides"]
+            has_all_fields = all(field in presentation_data for field in required_fields)
+            
+            if has_all_fields and len(slides) >= 5:
+                # Verify slide structure
+                first_slide = slides[0]
+                slide_fields = ["title", "content", "layout", "speaker_notes"]
+                slide_has_fields = all(field in first_slide for field in slide_fields)
+                
+                if slide_has_fields:
+                    self.log_test("AI Generation for Flow", True, 
+                                f"Generated presentation with {len(slides)} slides")
+                    return presentation_data
+                else:
+                    self.log_test("AI Generation for Flow", False, 
+                                f"Slides missing required fields: {slide_fields}")
+            else:
+                self.log_test("AI Generation for Flow", False, 
+                            f"Missing presentation fields or insufficient slides")
+        else:
+            self.log_test("AI Generation for Flow", False, "Failed to generate AI presentation", details)
+        
+        return None
+    
+    async def test_create_from_ai_data(self, ai_data):
+        """Test creating presentation from AI data"""
+        print("    💾 Step 2: Creating presentation from AI data...")
+        
+        success, response, details = await self.make_request("POST", "/presentations/from-ai", ai_data)
+        
+        if success and "id" in response:
+            presentation_id = response["id"]
+            title = response.get("title", "")
+            
+            self.log_test("Create Presentation from AI Data", True, 
+                        f"Created presentation: {presentation_id} - '{title}'")
+            return presentation_id
+        else:
+            self.log_test("Create Presentation from AI Data", False, 
+                        "Failed to create presentation from AI data", details)
+            return None
+    
+    async def test_preview_endpoint(self, presentation_id):
+        """Test preview endpoint with created presentation"""
+        print("    👁️  Step 3: Testing preview endpoint...")
+        
+        success, response, details = await self.make_request(
+            "GET", f"/export/preview/{presentation_id}", auth_required=False)
+        
+        if success:
+            presentation = response.get("presentation", {})
+            slides = response.get("slides", [])
+            
+            if presentation and slides:
+                # Verify slides have elements
+                slides_with_elements = [s for s in slides if s.get("elements")]
+                
+                if len(slides_with_elements) > 0:
+                    # Check if elements have proper structure
+                    first_slide = slides_with_elements[0]
+                    elements = first_slide.get("elements", [])
+                    
+                    if elements and len(elements) >= 1:
+                        # Check element structure
+                        first_element = elements[0]
+                        element_fields = ["type", "position", "content"]
+                        has_element_fields = all(field in first_element for field in element_fields)
+                        
+                        if has_element_fields:
+                            self.log_test("Preview Endpoint Test", True, 
+                                        f"Preview working - {len(slides)} slides with positioned elements")
+                        else:
+                            self.log_test("Preview Endpoint Test", False, 
+                                        "Elements missing required fields")
+                    else:
+                        self.log_test("Preview Endpoint Test", False, 
+                                    "Slides have no elements")
+                else:
+                    self.log_test("Preview Endpoint Test", False, 
+                                "No slides contain elements")
+            else:
+                self.log_test("Preview Endpoint Test", False, 
+                            "Preview response missing presentation or slides data")
+        else:
+            if "404" in details:
+                self.log_test("Preview Endpoint Test", False, 
+                            "Preview returned 404 - presentation not found", details)
+            else:
+                self.log_test("Preview Endpoint Test", False, 
+                            "Preview endpoint failed", details)
+
     # ==================== MAIN TEST RUNNER ====================
     
     async def run_all_tests(self):
@@ -469,10 +598,12 @@ class SlideoTester:
                 print("❌ Cannot proceed without authentication")
                 return
             
-            print("\n🤖 AI SERVICE TESTS")
+            # Focus on AI Presentation Generation Flow as requested
+            await self.test_ai_presentation_flow()
+            
+            print("\n🤖 ADDITIONAL AI SERVICE TESTS")
             print("-" * 30)
             await self.test_ai_health_check()
-            await self.test_ai_presentation_generation()
             await self.test_ai_outline_generation()
             await self.test_ai_slide_content_generation()
             await self.test_ai_content_improvement()
