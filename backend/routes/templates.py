@@ -5,6 +5,20 @@ from datetime import datetime
 
 from models.template import Template, TemplateResponse
 from routes.auth import get_db
+from utils.auth_utils import get_current_user
+from pydantic import BaseModel, Field
+from typing import Dict, Any
+import logging
+
+logger = logging.getLogger(__name__)
+
+class ApplyTemplateRequest(BaseModel):
+    \"\"\"Request to apply template to presentation\"\"\"
+    presentation_id: str
+    template_id: str
+    color_scheme: Dict[str, str]
+    font_pairing: Dict[str, str]
+
 
 router = APIRouter(prefix="/templates", tags=["Templates"])
 
