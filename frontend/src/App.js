@@ -46,38 +46,45 @@ const PublicRoute = ({ children }) => {
 
 function App() {
   return (
-    <div className="App">
-      <BrowserRouter>
-        <AuthProvider>
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <PublicRoute>
-                  <Landing />
-                </PublicRoute>
-              }
-            />
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/editor/:presentationId"
-              element={
-                <ProtectedRoute>
-                  <Editor />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-        </AuthProvider>
-      </BrowserRouter>
-    </div>
+    <ErrorBoundary>
+      <div className="App">
+        <BrowserRouter>
+          <AuthProvider>
+            <Toaster position="top-right" richColors closeButton />
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <PublicRoute>
+                    <Landing />
+                  </PublicRoute>
+                }
+              />
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/editor/:presentationId"
+                element={
+                  <ProtectedRoute>
+                    <Editor />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/preview/:id"
+                element={<Preview />}
+              />
+            </Routes>
+          </AuthProvider>
+        </BrowserRouter>
+      </div>
+    </ErrorBoundary>
   );
 }
 
