@@ -86,6 +86,14 @@ export const Dashboard = () => {
               <Plus className="w-5 h-5" />
               Create New
             </Button>
+            <Button 
+              variant="outline"
+              className="gap-2" 
+              onClick={() => setShowOnboarding(true)}
+            >
+              <HelpCircle className="w-5 h-5" />
+              Tutorial
+            </Button>
           </div>
 
           {/* Search and Filter Bar */}
