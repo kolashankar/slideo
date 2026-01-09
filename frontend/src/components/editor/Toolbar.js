@@ -10,11 +10,13 @@ import {
   ZoomOut,
   Maximize2,
   Save,
-  Sparkles
+  Sparkles,
+  MessageSquare,
+  Palette
 } from 'lucide-react';
 import { ImageGenerator } from './ImageGenerator';
 
-export const Toolbar = ({ editor }) => {
+export const Toolbar = ({ editor, onToggleChat, onToggleTemplates, showChat }) => {
   const [showImageGenerator, setShowImageGenerator] = useState(false);
   
   const addTextElement = () => {
