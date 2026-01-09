@@ -126,7 +126,7 @@ async def get_slide(
     """
     try:
         # Get slide
-        slide = await slides_collection.find_one({"id": slide_id})
+        slide = await slides_collection.find_one({"id": slide_id}, {"_id": 0})
         
         if not slide:
             raise HTTPException(status_code=404, detail="Slide not found")
