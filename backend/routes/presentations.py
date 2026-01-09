@@ -145,6 +145,113 @@ async def delete_presentation(
     
     return {"message": "Presentation deleted successfully"}
 
+@router.get("/{presentation_id}/slides")
+async def get_presentation_slides(
+    presentation_id: str,
+    current_user: User = Depends(get_current_user),
+    db: AsyncIOMotorDatabase = Depends(get_db)
+):
+    """
+    Get all slides for a presentation
+    
+    Returns slides ordered by slide_number
+    """
+    try:
+        # Verify presentation belongs to user
+        presentation = await db.presentations.find_one(
+            {"id": presentation_id, "user_id": current_user.id},
+            {"_id": 0}
+        )
+        
+        if not presentation:
+            raise HTTPException(status_code=404, detail="Presentation not found")
+        
+        # Get all slides for this presentation
+        slides = await db.slides.find(
+            {"presentation_id": presentation_id},
+            {"_id": 0}
+        ).sort("slide_number", 1).to_list(length=100)
+        
+        return {
+            "success": True,
+            "data": slides,
+            "count": len(slides)
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching slides: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.post("/{presentation_id}/slides")
+async def create_slide_for_presentation(
+    presentation_id: str,
+    slide_data: dict,
+    current_user: User = Depends(get_current_user),
+    db: AsyncIOMotorDatabase = Depends(get_db)
+):
+    """
+    Create a new slide in a presentation
+    """
+    try:
+        import uuid
+        from models.slide import Slide
+        
+        # Verify presentation belongs to user
+        presentation = await db.presentations.find_one(
+            {"id": presentation_id, "user_id": current_user.id}
+        )
+        
+        if not presentation:
+            raise HTTPException(status_code=404, detail="Presentation not found")
+        
+        # Create slide object
+        slide = Slide(
+            presentation_id=presentation_id,
+            slide_number=slide_data.get('slide_number', 1),
+            title=slide_data.get('title', 'Untitled Slide'),
+            layout=slide_data.get('layout', 'blank'),
+            elements=slide_data.get('elements', []),
+            background=slide_data.get('background', {'type': 'solid', 'color': '#ffffff'}),
+            notes=slide_data.get('notes', ''),
+            duration=slide_data.get('duration', 0),
+            transition=slide_data.get('transition', 'none')
+        )
+        
+        # Insert into database
+        slide_dict = slide.model_dump()
+        slide_dict['created_at'] = slide_dict['created_at'].isoformat()
+        slide_dict['updated_at'] = slide_dict['updated_at'].isoformat()
+        await db.slides.insert_one(slide_dict)
+        
+        # Update presentation's slides array and timestamp
+        await db.presentations.update_one(
+            {"id": presentation_id},
+            {
+                "$push": {"slides": slide.id},
+                "$set": {"updated_at": datetime.now(timezone.utc).isoformat()}
+            }
+        )
+        
+        logger.info(f"Created slide {slide.id} in presentation {presentation_id}")
+        
+        # Convert datetime objects back for response
+        slide_dict['created_at'] = datetime.fromisoformat(slide_dict['created_at'])
+        slide_dict['updated_at'] = datetime.fromisoformat(slide_dict['updated_at'])
+        
+        return {
+            "success": True,
+            "data": slide_dict,
+            "message": "Slide created successfully"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error creating slide: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @router.post("/from-ai", response_model=PresentationResponse)
 async def create_presentation_from_ai(
     ai_data: dict,
