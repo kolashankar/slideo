@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './hooks/useAuth';
 import { Landing } from './pages/Landing';
 import { Dashboard } from './pages/Dashboard';
+import { Editor } from './pages/Editor';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
