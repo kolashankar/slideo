@@ -190,6 +190,14 @@ export const Toolbar = ({ editor, onToggleChat, onToggleTemplates, showChat, pre
         {/* Right: Save Status and Actions */}
         <div className="flex items-center gap-3">
           <button
+            onClick={() => setShowShortcuts(true)}
+            className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg transition-colors text-sm font-medium text-gray-700"
+            title="Keyboard Shortcuts"
+          >
+            <Keyboard className="h-4 w-4" />
+          </button>
+          
+          <button
             onClick={onToggleTemplates}
             className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg transition-colors text-sm font-medium text-gray-700"
             title="Change Template"
@@ -209,6 +217,35 @@ export const Toolbar = ({ editor, onToggleChat, onToggleTemplates, showChat, pre
           >
             <MessageSquare className="h-4 w-4" />
             AI Chat
+          </button>
+          
+          <div className="h-6 w-px bg-gray-300"></div>
+          
+          <button
+            onClick={handleShare}
+            className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg transition-colors text-sm font-medium text-gray-700"
+            title="Share Presentation"
+          >
+            <Share2 className="h-4 w-4" />
+            Share
+          </button>
+          
+          <button
+            onClick={handleExport}
+            className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg transition-colors text-sm font-medium text-gray-700"
+            title="Export to PDF"
+          >
+            <Download className="h-4 w-4" />
+            Export
+          </button>
+          
+          <button
+            onClick={handlePreview}
+            className="flex items-center gap-2 px-3 py-2 bg-blue-600 text-white hover:bg-blue-700 rounded-lg transition-colors text-sm font-medium"
+            title="Preview Presentation"
+          >
+            <Play className="h-4 w-4" />
+            Present
           </button>
           
           {editor.saving ? (
@@ -232,6 +269,12 @@ export const Toolbar = ({ editor, onToggleChat, onToggleTemplates, showChat, pre
           onClose={() => setShowImageGenerator(false)}
         />
       )}
+      
+      {/* Keyboard Shortcuts Modal */}
+      <KeyboardShortcuts
+        isOpen={showShortcuts}
+        onClose={() => setShowShortcuts(false)}
+      />
     </>
   );
 };
