@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Complete and test everything so that with the prompt it will generate the complete PPT. User was getting 404 errors when trying to load presentations in preview mode."
+user_problem_statement: "Fix 404 error when loading presentation slides in editor and complete sidebar development."
 
 backend:
   - task: "AI Presentation Generation API"
@@ -117,6 +117,30 @@ backend:
         agent: "main"
         comment: "AI generation endpoint /api/ai/generate-presentation exists and generates presentation structure using Gemini 3 Flash model via emergentintegrations"
   
+  - task: "Get Presentation Slides Endpoint"
+    implemented: true
+    working: "NA"
+    file: "backend/routes/presentations.py"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "FIXED 404 ERROR: Added missing GET /api/presentations/{presentation_id}/slides endpoint that returns all slides for a presentation. This endpoint was being called by frontend useEditor.js hook but didn't exist on backend, causing 404 errors in editor."
+  
+  - task: "Create Slide for Presentation Endpoint"
+    implemented: true
+    working: "NA"
+    file: "backend/routes/presentations.py"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "FIXED: Added missing POST /api/presentations/{presentation_id}/slides endpoint that creates new slides. Frontend was calling this endpoint but it didn't exist."
+  
   - task: "Create Presentation from AI Data Endpoint"
     implemented: true
     working: "NA"
@@ -127,7 +151,7 @@ backend:
     status_history:
       - working: "NA"
         agent: "main"
-        comment: "NEW: Created /api/presentations/from-ai endpoint that takes AI-generated data and creates presentation + slides in MongoDB with proper elements and positioning"
+        comment: "Endpoint /api/presentations/from-ai that takes AI-generated data and creates presentation + slides in MongoDB with proper elements and positioning"
   
   - task: "Preview Endpoint"
     implemented: true
@@ -139,7 +163,7 @@ backend:
     status_history:
       - working: true
         agent: "main"
-        comment: "Preview endpoint /api/export/preview/{id} exists and returns presentation + slides data. Was returning 404 because presentations weren't being created from AI data"
+        comment: "Preview endpoint /api/export/preview/{id} exists and returns presentation + slides data"
   
   - task: "Slides Management API"
     implemented: true
@@ -151,7 +175,7 @@ backend:
     status_history:
       - working: true
         agent: "main"
-        comment: "Slide CRUD operations work correctly"
+        comment: "Slide CRUD operations at /api/slides/* endpoints work correctly"
 
 frontend:
   - task: "AI Generator Component"
