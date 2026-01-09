@@ -63,6 +63,14 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/editor/:presentationId"
+              element={
+                <ProtectedRoute>
+                  <Editor />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </AuthProvider>
       </BrowserRouter>
