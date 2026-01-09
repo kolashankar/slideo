@@ -21,12 +21,14 @@ app = FastAPI(title="Slideo API", description="AI-Powered Presentation Builder")
 api_router = APIRouter(prefix="/api")
 
 # Import routes
-from routes import auth, presentations, templates
+from routes import auth, presentations, templates, ai, slides
 
 # Add routes to API router
 api_router.include_router(auth.router)
 api_router.include_router(presentations.router)
 api_router.include_router(templates.router)
+api_router.include_router(ai.router)
+api_router.include_router(slides.router)
 
 # Basic health check
 @api_router.get("/")
