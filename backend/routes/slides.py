@@ -207,7 +207,7 @@ async def update_slide(
         )
         
         # Get updated slide
-        updated_slide = await slides_collection.find_one({"id": slide_id})
+        updated_slide = await slides_collection.find_one({"id": slide_id}, {"_id": 0})
         
         logger.info(f"Updated slide {slide_id}")
         
