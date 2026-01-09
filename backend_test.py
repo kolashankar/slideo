@@ -581,6 +581,209 @@ class SlideoTester:
                 self.log_test("Preview Endpoint Test", False, 
                             "Preview endpoint failed", details)
 
+    # ==================== CRITICAL 404 FIX TESTS ====================
+    
+    async def test_critical_slide_endpoints(self):
+        """Test the critical endpoints that were added to fix 404 errors"""
+        print("\n🎯 TESTING CRITICAL SLIDE ENDPOINTS (404 FIX)")
+        print("-" * 50)
+        
+        # Create test presentation first
+        if not await self.create_test_presentation():
+            return
+        
+        # Test the specific endpoints mentioned in review request
+        await self.test_get_presentation_slides_endpoint()
+        await self.test_create_slide_for_presentation_endpoint()
+        await self.test_slide_endpoints_authentication()
+        await self.test_slide_endpoints_error_handling()
+    
+    async def test_get_presentation_slides_endpoint(self):
+        """Test GET /api/presentations/{presentation_id}/slides endpoint"""
+        if not self.test_presentation_id:
+            self.log_test("GET Presentation Slides Endpoint", False, "No test presentation available")
+            return
+        
+        print("    📋 Testing GET /api/presentations/{id}/slides...")
+        
+        # First create 2-3 slides for testing
+        slide_ids = []
+        for i in range(1, 4):
+            slide_data = {
+                "slide_number": i,
+                "layout": "content" if i > 1 else "title-slide",
+                "title": f"Test Slide {i}",
+                "elements": [
+                    {
+                        "type": "text",
+                        "position": {"x": 10, "y": 10, "width": 80, "height": 20, "z_index": 1},
+                        "content": {"text": f"Content for slide {i}"},
+                        "style": {"font_size": 18, "color": "#333333"}
+                    }
+                ],
+                "background": {"type": "solid", "color": "#ffffff"}
+            }
+            
+            success, response, details = await self.make_request(
+                "POST", f"/presentations/{self.test_presentation_id}/slides", slide_data)
+            
+            if success and response.get("success"):
+                slide_ids.append(response.get("data", {}).get("id"))
+        
+        # Now test GET endpoint
+        success, response, details = await self.make_request(
+            "GET", f"/presentations/{self.test_presentation_id}/slides")
+        
+        if success and response.get("success"):
+            slides = response.get("data", [])
+            count = response.get("count", 0)
+            
+            # Verify response format
+            if "success" in response and "data" in response and "count" in response:
+                # Verify slides are ordered by slide_number
+                slide_numbers = [slide.get("slide_number", 0) for slide in slides]
+                is_ordered = slide_numbers == sorted(slide_numbers)
+                
+                if is_ordered and count == len(slides) and len(slides) >= 3:
+                    self.log_test("GET Presentation Slides Endpoint", True, 
+                                f"Retrieved {count} slides in correct order")
+                else:
+                    self.log_test("GET Presentation Slides Endpoint", False, 
+                                f"Slides not properly ordered or count mismatch. Got {len(slides)} slides, count: {count}")
+            else:
+                self.log_test("GET Presentation Slides Endpoint", False, 
+                            "Response missing required fields (success, data, count)")
+        else:
+            self.log_test("GET Presentation Slides Endpoint", False, 
+                        "Failed to retrieve slides", details)
+    
+    async def test_create_slide_for_presentation_endpoint(self):
+        """Test POST /api/presentations/{presentation_id}/slides endpoint"""
+        if not self.test_presentation_id:
+            self.log_test("POST Create Slide Endpoint", False, "No test presentation available")
+            return
+        
+        print("    ➕ Testing POST /api/presentations/{id}/slides...")
+        
+        # Test slide creation with proper payload
+        slide_data = {
+            "slide_number": 1,
+            "layout": "blank",
+            "title": "Test Slide Creation",
+            "elements": [],
+            "background": {"type": "solid", "color": "#ffffff"}
+        }
+        
+        success, response, details = await self.make_request(
+            "POST", f"/presentations/{self.test_presentation_id}/slides", slide_data)
+        
+        if success and response.get("success"):
+            slide_data_response = response.get("data", {})
+            
+            # Verify response format
+            if "success" in response and "data" in response and "message" in response:
+                # Verify slide was created with correct data
+                if (slide_data_response.get("title") == "Test Slide Creation" and
+                    slide_data_response.get("layout") == "blank" and
+                    slide_data_response.get("slide_number") == 1):
+                    
+                    # Store slide ID for further testing
+                    self.test_slide_id = slide_data_response.get("id")
+                    
+                    self.log_test("POST Create Slide Endpoint", True, 
+                                f"Created slide with ID: {self.test_slide_id}")
+                    
+                    # Test creating another slide to verify slide_number increments
+                    await self.test_slide_number_increment()
+                else:
+                    self.log_test("POST Create Slide Endpoint", False, 
+                                "Slide data doesn't match input")
+            else:
+                self.log_test("POST Create Slide Endpoint", False, 
+                            "Response missing required fields (success, data, message)")
+        else:
+            self.log_test("POST Create Slide Endpoint", False, 
+                        "Failed to create slide", details)
+    
+    async def test_slide_number_increment(self):
+        """Test that slide numbers increment properly"""
+        slide_data = {
+            "slide_number": 2,
+            "layout": "content",
+            "title": "Second Test Slide",
+            "elements": [],
+            "background": {"type": "solid", "color": "#ffffff"}
+        }
+        
+        success, response, details = await self.make_request(
+            "POST", f"/presentations/{self.test_presentation_id}/slides", slide_data)
+        
+        if success and response.get("success"):
+            slide_data_response = response.get("data", {})
+            if slide_data_response.get("slide_number") == 2:
+                self.log_test("Slide Number Increment", True, "Slide numbers increment correctly")
+            else:
+                self.log_test("Slide Number Increment", False, 
+                            f"Expected slide_number 2, got {slide_data_response.get('slide_number')}")
+        else:
+            self.log_test("Slide Number Increment", False, "Failed to create second slide", details)
+    
+    async def test_slide_endpoints_authentication(self):
+        """Test authentication requirements for slide endpoints"""
+        print("    🔐 Testing authentication requirements...")
+        
+        # Store original token
+        original_token = self.auth_token
+        self.auth_token = None
+        
+        # Test GET without authentication
+        success, response, details = await self.make_request(
+            "GET", f"/presentations/{self.test_presentation_id}/slides")
+        
+        if not success and "401" in details:
+            self.log_test("GET Slides - Auth Required", True, "Properly rejected unauthorized GET request")
+        else:
+            self.log_test("GET Slides - Auth Required", False, "Should require authentication for GET")
+        
+        # Test POST without authentication
+        slide_data = {"slide_number": 1, "layout": "blank", "title": "Test"}
+        success, response, details = await self.make_request(
+            "POST", f"/presentations/{self.test_presentation_id}/slides", slide_data)
+        
+        if not success and "401" in details:
+            self.log_test("POST Slides - Auth Required", True, "Properly rejected unauthorized POST request")
+        else:
+            self.log_test("POST Slides - Auth Required", False, "Should require authentication for POST")
+        
+        # Restore token
+        self.auth_token = original_token
+    
+    async def test_slide_endpoints_error_handling(self):
+        """Test error handling for slide endpoints"""
+        print("    🚫 Testing error handling...")
+        
+        # Test with non-existent presentation ID
+        fake_id = "non-existent-presentation-id"
+        
+        # Test GET with invalid presentation ID
+        success, response, details = await self.make_request(
+            "GET", f"/presentations/{fake_id}/slides")
+        
+        if not success and "404" in details:
+            self.log_test("GET Slides - Invalid ID", True, "Properly returned 404 for invalid presentation ID")
+        else:
+            self.log_test("GET Slides - Invalid ID", False, "Should return 404 for invalid presentation ID")
+        
+        # Test POST with invalid presentation ID
+        slide_data = {"slide_number": 1, "layout": "blank", "title": "Test"}
+        success, response, details = await self.make_request(
+            "POST", f"/presentations/{fake_id}/slides", slide_data)
+        
+        if not success and "404" in details:
+            self.log_test("POST Slides - Invalid ID", True, "Properly returned 404 for invalid presentation ID")
+        else:
+            self.log_test("POST Slides - Invalid ID", False, "Should return 404 for invalid presentation ID")
+
     # ==================== MAIN TEST RUNNER ====================
     
     async def run_all_tests(self):
@@ -597,6 +800,9 @@ class SlideoTester:
             if not self.auth_token:
                 print("❌ Cannot proceed without authentication")
                 return
+            
+            # PRIORITY: Test the critical endpoints that fix 404 errors
+            await self.test_critical_slide_endpoints()
             
             # Focus on AI Presentation Generation Flow as requested
             await self.test_ai_presentation_flow()
