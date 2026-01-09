@@ -138,8 +138,30 @@ export const Toolbar = ({ editor, onToggleChat, onToggleTemplates, showChat }) =
           </button>
         </div>
         
-        {/* Right: Save Status */}
-        <div className="flex items-center gap-2">
+        {/* Right: Save Status and Actions */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={onToggleTemplates}
+            className="flex items-center gap-2 px-3 py-2 hover:bg-gray-100 rounded-lg transition-colors text-sm font-medium text-gray-700"
+            title="Change Template"
+          >
+            <Palette className="h-4 w-4" />
+            Templates
+          </button>
+          
+          <button
+            onClick={onToggleChat}
+            className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors text-sm font-medium ${
+              showChat 
+                ? 'bg-purple-100 text-purple-700' 
+                : 'hover:bg-gray-100 text-gray-700'
+            }`}
+            title="AI Assistant"
+          >
+            <MessageSquare className="h-4 w-4" />
+            AI Chat
+          </button>
+          
           {editor.saving ? (
             <div className="flex items-center gap-2 text-sm text-gray-600">
               <Save className="h-4 w-4 animate-pulse" />
