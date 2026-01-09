@@ -13,7 +13,7 @@ from datetime import datetime
 from typing import Dict, Any, Optional
 
 # Configuration
-BACKEND_URL = "https://textgen-deck.preview.emergentagent.com/api"
+BACKEND_URL = "https://deck-craft-editor.preview.emergentagent.com/api"
 TEST_USER_EMAIL = "test.user.ai@slideo.com"
 TEST_USER_PASSWORD = "TestPassword123!"
 TEST_USER_NAME = "AI Test User"
