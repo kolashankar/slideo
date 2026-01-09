@@ -1,9 +1,12 @@
 import '@/App.css';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './hooks/useAuth';
+import { Toaster } from 'sonner';
+import ErrorBoundary from './components/common/ErrorBoundary';
 import { Landing } from './pages/Landing';
 import { Dashboard } from './pages/Dashboard';
 import { Editor } from './pages/Editor';
+import Preview from './pages/Preview';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
