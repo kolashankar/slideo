@@ -236,13 +236,25 @@ async def create_slide_for_presentation(
         
         logger.info(f"Created slide {slide.id} in presentation {presentation_id}")
         
-        # Convert datetime objects back for response
-        slide_dict['created_at'] = datetime.fromisoformat(slide_dict['created_at'])
-        slide_dict['updated_at'] = datetime.fromisoformat(slide_dict['updated_at'])
+        # Prepare response data with proper serialization
+        response_data = {
+            "id": slide.id,
+            "presentation_id": slide.presentation_id,
+            "slide_number": slide.slide_number,
+            "title": slide.title,
+            "layout": slide.layout,
+            "elements": slide.elements,
+            "background": slide.background.model_dump() if hasattr(slide.background, 'model_dump') else slide.background,
+            "notes": slide.notes,
+            "duration": slide.duration,
+            "transition": slide.transition,
+            "created_at": slide.created_at.isoformat(),
+            "updated_at": slide.updated_at.isoformat()
+        }
         
         return {
             "success": True,
-            "data": slide_dict,
+            "data": response_data,
             "message": "Slide created successfully"
         }
         
