@@ -436,7 +436,7 @@ class SlideoTester:
 
     async def test_invalid_presentation_id(self):
         """Test accessing slides with invalid presentation ID"""
-        success, response, details = await self.make_request("GET", "/presentations/invalid-id/slides")
+        success, response, details = await self.make_request("GET", "/slides/presentations/invalid-id/slides")
         
         if not success and ("404" in details or "not found" in str(response).lower()):
             self.log_test("Invalid Presentation ID Test", True, "Properly handled invalid presentation ID")
